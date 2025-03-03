@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2022,
+    "price_per_day": 50,
+    "available": true
+  },
+  {
+    "id": 2,
+    "make": "Honda",
+    "model": "Civic",
+    "year": 2021,
+    "price_per_day": 45,
+    "available": false
+  },
+  {
+    "id": 3,
+    "make": "Ford",
+    "model": "Mustang",
+    "year": 2023,
+    "price_per_day": 85,
+    "available": true
+  },
+  {
+    "id": 4,
+    "make": "Tesla",
+    "model": "Model 3",
+    "year": 2022,
+    "price_per_day": 90,
+    "available": true
+  }
+]

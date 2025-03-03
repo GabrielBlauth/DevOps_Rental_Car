@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!-- templates/index.html -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental App</title>
+    <!-- Corrija a linha do link do CSS no index.html -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='car-rental-css.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Simple Car Rental Application</h1>
+    </header>
+    
+    <main>
+        <section id="available-cars">
+            <h2>Available Cars</h2>
+            <div class="cars-container" id="cars-list">
+                <!-- Cars will be loaded here by JavaScript -->
+                <p>Loading cars...</p>
+            </div>
+        </section>
+        
+        <section id="rental-form-section" class="hidden">
+            <h2>Rent a Car</h2>
+            <form id="rental-form">
+                <input type="hidden" id="car-id">
+                
+                <div class="form-group">
+                    <label for="car-details">Selected Car:</label>
+                    <p id="car-details"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-name">Your Name:</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-email">Your Email:</label>
+                    <input type="email" id="customer-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="end-date">End Date:</label>
+                    <input type="date" id="end-date" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit">Confirm Rental</button>
+                    <button type="button" id="cancel-rental">Cancel</button>
+                </div>
+            </form>
+        </section>
+        
+        <section id="active-rentals">
+            <h2>Your Active Rentals</h2>
+            <div class="rentals-container" id="rentals-list">
+                <!-- Rentals will be loaded here by JavaScript -->
+                <p>Loading rentals...</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Simple Car Rental App</p>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='car-rental-js.js') }}"></script>
+</body>
+</html>

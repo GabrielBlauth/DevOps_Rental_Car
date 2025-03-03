@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "car_id": 3,
+    "customer_name": "Joao Oliveira",
+    "customer_email": "joaoh1994@gmail.com",
+    "start_date": "2025-03-05",
+    "end_date": "2025-03-21",
+    "total_price": 1445,
+    "status": "completed"
+  },
+  {
+    "id": 2,
+    "car_id": 1,
+    "customer_name": "Luanzinho delas",
+    "customer_email": "lulu@gmail.com",
+    "start_date": "2025-03-13",
+    "end_date": "2025-03-30",
+    "total_price": 900,
+    "status": "completed"
+  },
+  {
+    "id": 3,
+    "car_id": 2,
+    "customer_name": "Joao Oliveira",
+    "customer_email": "joaoh1994@gmail.com",
+    "start_date": "2025-03-06",
+    "end_date": "2025-03-21",
+    "total_price": 720,
+    "status": "active"
+  }
+]
