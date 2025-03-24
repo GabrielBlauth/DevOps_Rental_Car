@@ -27,6 +27,36 @@
     "start_date": "2025-03-06",
     "end_date": "2025-03-21",
     "total_price": 720,
-    "status": "active"
+    "status": "completed"
+  },
+  {
+    "id": 4,
+    "car_id": 4,
+    "customer_name": "Gabriel",
+    "customer_email": "Gabriel@gmail.com",
+    "start_date": "2025-03-06",
+    "end_date": "2025-03-14",
+    "total_price": 810,
+    "status": "completed"
+  },
+  {
+    "id": 5,
+    "car_id": 8,
+    "customer_name": "Stuart",
+    "customer_email": "stuart@gmail.com",
+    "start_date": "2025-03-06",
+    "end_date": "2025-03-09",
+    "total_price": 280,
+    "status": "completed"
+  },
+  {
+    "id": 6,
+    "car_id": 7,
+    "customer_name": "David",
+    "customer_email": "david@gmail.com",
+    "start_date": "2025-03-08",
+    "end_date": "2025-03-11",
+    "total_price": 320,
+    "status": "completed"
   }
 ]

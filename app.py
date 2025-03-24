@@ -21,10 +21,18 @@ def initialize_db():
     if not os.path.exists('cars.json'):
         with open('cars.json', 'w') as f:
             json.dump([
-                {"id": 1, "make": "Toyota", "model": "Corolla", "year": 2022, "price_per_day": 50, "available": True},
-                {"id": 2, "make": "Honda", "model": "Civic", "year": 2021, "price_per_day": 45, "available": True},
-                {"id": 3, "make": "Ford", "model": "Mustang", "year": 2023, "price_per_day": 85, "available": True},
-                {"id": 4, "make": "Tesla", "model": "Model 3", "year": 2022, "price_per_day": 90, "available": True}
+                {"id": 1, "make": "Toyota", "model": "Corolla", "year": 2024, "price_per_day": 45, "available": True},
+                {"id": 2, "make": "Honda", "model": "Civic Hybrid", "year": 2025, "price_per_day": 50, "available": True},
+                {"id": 3, "make": "Ford", "model": "Mustang GT", "year": 2024, "price_per_day": 85, "available": True},
+                {"id": 4, "make": "Tesla", "model": "Model 3", "year": 2022, "price_per_day": 80, "available": True},
+                {"id": 5, "make": "Nissan", "model": "Z Performance", "year": 2024, "price_per_day": 80, "available": True},
+                {"id": 6, "make": "Mercedes", "model": "Benz CLA", "year": 2024, "price_per_day": 85, "available": True},
+                {"id": 7, "make": "BMW", "model": "5 Series", "year": 2024, "price_per_day": 85, "available": True},
+                {"id": 8, "make": "Lexus", "model": "LS 500", "year": 2024, "price_per_day": 80, "available": True},
+                {"id": 9, "make": "Mini", "model": "Countryman S", "year": 2025, "price_per_day": 65, "available": True},
+                {"id": 10, "make": "Genesis", "model": "GV70 3.5T", "year": 2024, "price_per_day": 70, "available": True},
+                {"id": 11, "make": "Chevrolet", "model": "Silverado", "year": 2024, "price_per_day": 100, "available": True},
+                {"id": 12, "make": "Hyundai", "model": "Tucson Hybrid", "year": 2024, "price_per_day": 80, "available": True},
             ], f, indent=2)
     
     if not os.path.exists('rentals.json'):
