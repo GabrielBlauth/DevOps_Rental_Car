@@ -185,7 +185,7 @@ footer {
 }
 
 /* Carrossel
-/* Estilos para o contêiner do carrossel */
+/* Styles for carousel container */
 .carousel-container {
     position: relative;
     width: 100%;
@@ -193,13 +193,13 @@ footer {
     border-radius: 8px;
 }
 
-/* Estilos para o carrossel */
+/* Styles for carousel */
 .carousel {
     display: flex;
     transition: transform 0.5s ease-in-out;
 }
 
-/* Estilos para cada item do carrossel */
+/* Styles for carousel*/
 .carousel-item {
     min-width: 100%;
     box-sizing: border-box;
@@ -212,7 +212,7 @@ footer {
     border-radius: 8px;
 }
 
-/* Estilos para os botões de navegação */
+/* Styles for nav*/
 .carousel-button {
     position: absolute;
     top: 50%;
@@ -237,4 +237,16 @@ footer {
 
 .carousel-button:hover {
     background-color: rgba(0, 0, 0, 0.8);
+}
+
+.reviews-box {
+    background-color: #f1f1f1;
+    border-left: 5px solid #007bff;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+}
+.reviews-box h4 {
+    margin-bottom: 10px;
+    color: #007bff;
 }

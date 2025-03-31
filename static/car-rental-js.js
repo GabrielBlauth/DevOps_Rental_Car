@@ -1,8 +1,6 @@
 // static/js/script.js
 
-// Wait for the DOM to be fully loaded before executing code
 document.addEventListener('DOMContentLoaded', function () {
-    // Store references to DOM elements we'll use repeatedly
     const carsList = document.getElementById('cars-list');
     const rentalsList = document.getElementById('rentals-list');
     const rentalFormSection = document.getElementById('rental-form-section');
@@ -13,41 +11,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const startDateInput = document.getElementById('start-date');
     const endDateInput = document.getElementById('end-date');
 
-    // Set minimum dates for the date inputs (can't rent in the past)
     const today = new Date().toISOString().split('T')[0];
     startDateInput.min = today;
     endDateInput.min = today;
 
-    // Initialize the application
     init();
 
-    // Main initialization function
     function init() {
-        // Load available cars and active rentals
         loadCars();
         loadRentals();
 
-        // Set up event listeners
         rentalForm.addEventListener('submit', handleRentalSubmit);
         cancelRentalButton.addEventListener('click', hideRentalForm);
 
-        // Add event listener for start date to update end date minimum
         startDateInput.addEventListener('change', function () {
             endDateInput.min = startDateInput.value;
-
-            // If end date is now before start date, update it
             if (endDateInput.value < startDateInput.value) {
                 endDateInput.value = startDateInput.value;
             }
         });
     }
 
-    // Function to load available cars from the API
     function loadCars() {
-        // Show loading message
         carsList.innerHTML = '<p>Loading cars...</p>';
 
-        // Fetch only available cars
         fetch('/api/cars?available=true')
             .then(response => response.json())
             .then(cars => {
@@ -56,10 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Clear loading message
                 carsList.innerHTML = '';
 
-                // Display each car as a card
                 cars.forEach(car => {
                     const carCard = document.createElement('div');
                     carCard.className = 'car-card';
@@ -79,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <img src="/static/img/cars/${car.make}/4.jpg" alt="${car.make} ${car.model} Image 4">
                                 </div>
                             </div>
-                            <!-- Botões de navegação -->
                             <button class="carousel-button prev">&#10094;</button>
                             <button class="carousel-button next">&#10095;</button>
                         </div>
@@ -93,31 +77,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     carsList.appendChild(carCard);
 
-                    // Adicionar funcionalidade de carrossel para este card
                     const carousel = carCard.querySelector('.carousel');
                     const prevButton = carCard.querySelector('.carousel-button.prev');
                     const nextButton = carCard.querySelector('.carousel-button.next');
                     let currentIndex = 0;
 
-                    // Função para atualizar o carrossel
                     function updateCarousel() {
                         const offset = -currentIndex * 100;
                         carousel.style.transform = `translateX(${offset}%)`;
                     }
 
-                    // Botão "Próximo"
                     nextButton.addEventListener('click', () => {
-                        currentIndex = (currentIndex + 1) % 4; // 4 imagens
+                        currentIndex = (currentIndex + 1) % 4;
                         updateCarousel();
                     });
 
-                    // Botão "Anterior"
                     prevButton.addEventListener('click', () => {
-                        currentIndex = (currentIndex - 1 + 4) % 4; // 4 imagens
+                        currentIndex = (currentIndex - 1 + 4) % 4;
                         updateCarousel();
                     });
 
-                    // Add click event to the rent button
                     const rentButton = carCard.querySelector('.rent-button');
                     rentButton.addEventListener('click', function () {
                         showRentalForm(car);
@@ -130,16 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Function to load active rentals from the API
     function loadRentals() {
-        // Show loading message
         rentalsList.innerHTML = '<p>Loading rentals...</p>';
 
-        // Fetch all rentals
         fetch('/api/rentals')
             .then(response => response.json())
             .then(rentals => {
-                // Filter to only active rentals
                 const activeRentals = rentals.filter(rental => rental.status === 'active');
 
                 if (activeRentals.length === 0) {
@@ -147,10 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Clear loading message
                 rentalsList.innerHTML = '';
 
-                // For each active rental, we need to get the car details
                 activeRentals.forEach(rental => {
                     fetch(`/api/cars/${rental.car_id}`)
                         .then(response => response.json())
@@ -171,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             rentalsList.appendChild(rentalCard);
 
-                            // Add click event to the return button
                             const returnButton = rentalCard.querySelector('.return-button');
                             returnButton.addEventListener('click', function () {
                                 returnCar(rental.id);
@@ -188,40 +160,54 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Function to show the rental form for a specific car
     function showRentalForm(car) {
-        // Set the car ID in the hidden input
         carIdInput.value = car.id;
-
-        // Display car details
-        carDetailsElement.textContent = `${car.make} ${car.model} (${car.year}) - $${car.price_per_day} per day`;
-
-        // Show the form section
+        carDetailsElement.innerHTML = `${car.make} ${car.model} (${car.year}) - $${car.price_per_day} per day`;
+    
+        fetch(`/api/cars/${car.id}/reviews`)
+            .then(res => res.json())
+            .then(reviews => {
+                const reviewsBox = document.createElement('div');
+                reviewsBox.className = 'reviews-box';
+                reviewsBox.innerHTML = '<h4>Last Reviews (Score 0–10)</h4>';
+                if (reviews.length === 0) {
+                    reviewsBox.innerHTML += '<p>No reviews yet.</p>';
+                } else {
+                    reviews.forEach(r => {
+                        const comment = r.hasOwnProperty("review_text") && r.review_text.trim() !== ""
+                            ? r.review_text
+                            : "No comments.";
+                    
+                        reviewsBox.innerHTML += `
+                            <p><strong>${r.customer_name}</strong>: ${r.score}/10</p>
+                            <p style="margin-bottom: 10px; font-style: italic;">"${comment}"</p>
+                        `;
+                    });
+                }
+                carDetailsElement.appendChild(reviewsBox);
+            })
+            .catch(err => console.error('Error loading reviews:', err));
+    
         rentalFormSection.classList.remove('hidden');
-
-        // Scroll to the form
         rentalFormSection.scrollIntoView({ behavior: 'smooth' });
     }
+    
+    
 
-    // Function to hide the rental form
     function hideRentalForm() {
         rentalFormSection.classList.add('hidden');
         rentalForm.reset();
     }
 
-    // Function to handle rental form submission
     function handleRentalSubmit(event) {
-        // Prevent the default form submission
         event.preventDefault();
 
-        // Get form values
         const carId = parseInt(carIdInput.value);
         const customerName = document.getElementById('customer-name').value;
         const customerEmail = document.getElementById('customer-email').value;
         const startDate = document.getElementById('start-date').value;
         const endDate = document.getElementById('end-date').value;
 
-        // Create rental data object
         const rentalData = {
             car_id: carId,
             customer_name: customerName,
@@ -230,7 +216,6 @@ document.addEventListener('DOMContentLoaded', function () {
             end_date: endDate
         };
 
-        // Send the rental request to the API
         fetch('/api/rentals', {
             method: 'POST',
             headers: {
@@ -240,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    // If response is not OK, parse the error message
                     return response.json().then(error => {
                         throw new Error(error.error || 'Failed to create rental');
                     });
@@ -248,13 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(newRental => {
-                // Show success message
                 alert('Car rented successfully!');
-
-                // Hide and reset the form
                 hideRentalForm();
-
-                // Reload cars and rentals to update the UI
                 loadCars();
                 loadRentals();
             })
@@ -264,19 +243,16 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Function to return a car (end a rental)
     function returnCar(rentalId) {
         if (!confirm('Are you sure you want to return this car?')) {
             return;
         }
 
-        // Send the return request to the API
         fetch(`/api/rentals/${rentalId}/return`, {
             method: 'PUT'
         })
             .then(response => {
                 if (!response.ok) {
-                    // If response is not OK, parse the error message
                     return response.json().then(error => {
                         throw new Error(error.error || 'Failed to return car');
                     });
@@ -284,10 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(result => {
-                // Show success message
                 alert('Car returned successfully!');
-
-                // Reload cars and rentals to update the UI
                 loadCars();
                 loadRentals();
             })
@@ -297,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Helper function to format dates
     function formatDate(dateString) {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);

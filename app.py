@@ -188,5 +188,25 @@ def return_car(rental_id):
     return jsonify({"message": "Car returned successfully", "rental": rental})
 
 # Main entry point to run the application
+@app.route('/api/cars/<int:car_id>/reviews', methods=['GET'])
+def get_car_reviews(car_id):
+    rentals = get_all_rentals()
+    reviews = []
+
+    for r in rentals:
+        if r.get("car_id") == car_id and "score" in r and r["score"] is not None:
+            reviews.append({
+                "customer_name": r["customer_name"],
+                "score": r["score"],
+                "review_text": r.get("review_text", "")
+            })
+
+    reviews = reviews[-3:][::-1]
+    return jsonify(reviews)
+
+
+# Main entry point
 if __name__ == '__main__':
     app.run(debug=True)
+
+
