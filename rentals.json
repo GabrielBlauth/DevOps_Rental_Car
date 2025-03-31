@@ -286,5 +286,15 @@
     "status": "completed",
     "score": 10,
     "review_text": "Stylish and modern design. Stands out everywhere."
+  },
+  {
+    "id": 25,
+    "car_id": 4,
+    "customer_name": "Joao Oliveira",
+    "customer_email": "joaoh1994@gmail.com",
+    "start_date": "2025-04-02",
+    "end_date": "2025-04-10",
+    "total_price": 720,
+    "status": "completed"
   }
 ]
