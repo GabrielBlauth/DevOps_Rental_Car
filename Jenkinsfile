@@ -5,6 +5,8 @@ pipeline {
         // Try these locations in order
         PYTHON_PATHS = 'C:\\Python39\\python.exe;C:\\Python310\\python.exe;python;python3'
         VENV_DIR = 'venv'
+        // GitHub credentials (stored in Jenkins credentials store)
+        GITHUB_CREDENTIALS_ID = 'github-token' // This should match what you created in Jenkins
     }
     
     stages {
@@ -12,7 +14,10 @@ pipeline {
             steps {
                 checkout scmGit(
                     branches: [[name: '*/main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/GabrielBlauth/DevOps_Rental_Car.git']]
+                    credentialsId: "${env.GITHUB_CREDENTIALS_ID}",
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/GabrielBlauth/DevOps_Rental_Car.git'
+                    ]]
                 )
             }
         }
