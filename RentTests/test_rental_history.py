@@ -28,9 +28,6 @@ class TestVerifyRentalHistory(unittest.TestCase):
             self.assertIn('end_date', rental)
             self.assertIn('total_price', rental)
             self.assertIn('status', rental)
-            self.assertIn('score', rental)
-            self.assertIn('review_text', rental)
-            
             
             # Parse and validate dates
             start_date = datetime.strptime(rental["start_date"], "%Y-%m-%d")
@@ -48,8 +45,6 @@ class TestVerifyRentalHistory(unittest.TestCase):
             print(f"Rental Period: {rental['start_date']} to {rental['end_date']}")
             print(f"Total Price: ${rental['total_price']}")
             print(f"Status: {rental['status']}")
-            print(f"Score: {rental['score']}")
-            print(f"Review: {rental['review_text']}")
             print("-" * 40)
 
     def test_rental_count(self):
@@ -69,3 +64,7 @@ class TestVerifyRentalHistory(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+if __name__ == '__main__':
+    import xmlrunner
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))

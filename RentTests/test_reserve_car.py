@@ -101,3 +101,7 @@ class TestReserveCar(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+if __name__ == '__main__':
+    import xmlrunner
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
