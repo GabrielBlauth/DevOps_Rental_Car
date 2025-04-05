@@ -2,23 +2,24 @@ pipeline {
     agent any
     
     environment {
-        // Try these locations in order
         PYTHON_PATHS = 'C:\\Python39\\python.exe;C:\\Python310\\python.exe;python;python3'
         VENV_DIR = 'venv'
-        // GitHub credentials (stored in Jenkins credentials store)
-        GITHUB_CREDENTIALS_ID = 'github-token' // This should match what you created in Jenkins
+        // Reference the credentials ID you created
+        GITHUB_CREDS = credentials('github-credentials')
     }
     
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(
-                    branches: [[name: '*/main']], 
-                    credentialsId: "${env.GITHUB_CREDENTIALS_ID}",
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    extensions: [],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/GabrielBlauth/DevOps_Rental_Car.git'
+                        url: 'https://github.com/GabrielBlauth/DevOps_Rental_Car.git',
+                        credentialsId: 'github-credentials'
                     ]]
-                )
+                ])
             }
         }
         
