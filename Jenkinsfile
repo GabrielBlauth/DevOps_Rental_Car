@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     environment {
-        
-        PYTHON = 'python' // Will try python then python3
+        // Try these locations in order
+        PYTHON_PATHS = 'C:\\Python39\\python.exe;C:\\Python310\\python.exe;python;python3'
         VENV_DIR = 'venv'
     }
     
@@ -12,9 +12,22 @@ pipeline {
             steps {
                 checkout scmGit(
                     branches: [[name: '*/main']], 
-                    extensions: [], 
                     userRemoteConfigs: [[url: 'https://github.com/GabrielBlauth/DevOps_Rental_Car.git']]
                 )
+            }
+        }
+        
+        stage('Find Python') {
+            steps {
+                script {
+                    // Try each possible Python path
+                    def pythonExe = findPython()
+                    if (pythonExe == null) {
+                        error("Python not found! Tried: ${env.PYTHON_PATHS}")
+                    }
+                    env.PYTHON = pythonExe
+                    echo "Using Python at: ${env.PYTHON}"
+                }
             }
         }
         
@@ -22,65 +35,57 @@ pipeline {
             steps {
                 bat """
                     @echo off
-                    :: Try python, then python3 if python doesn't work
-                    ${PYTHON} --version > nul 2>&1
-                    if %errorlevel% neq 0 (
-                        set PYTHON=python3
-                    )
+                    echo Creating virtual environment...
+                    "${env.PYTHON}" -m venv "${env.VENV_DIR}"
                     
-                    :: Create virtual environment
-                    %PYTHON% -m venv ${VENV_DIR}
-                    
-                    :: Install requirements
-                    call ${VENV_DIR}\\Scripts\\activate
-                    pip install pytest selenium pytest-html
+                    echo Installing dependencies...
+                    call "${env.VENV_DIR}\\Scripts\\activate"
+                    pip install pytest pytest-html selenium
                     if exist requirements.txt pip install -r requirements.txt
                 """
             }
         }
         
-        stage('Test Rental History') {
-            steps {
-                bat """
-                    call ${VENV_DIR}\\Scripts\\activate
-                    cd RentTests
-                    %PYTHON% -m pytest test_rental_history.py -v
-                """
-            }
-        }
-        
-        stage('Test Reserve Car') {
-            steps {
-                bat """
-                    call ${VENV_DIR}\\Scripts\\activate
-                    cd RentTests
-                    %PYTHON% -m pytest test_reserve_car.py -v
-                """
-            }
-        }
-        
-        stage('Test Search Cars') {
-            steps {
-                bat """
-                    call ${VENV_DIR}\\Scripts\\activate
-                    cd RentTests
-                    %PYTHON% -m pytest test_search_cars.py -v
-                """
+        stage('Run Tests') {
+            stages {
+                stage('Rental History') {
+                    steps {
+                        bat """
+                            call "${env.VENV_DIR}\\Scripts\\activate"
+                            cd RentTests
+                            pytest test_rental_history.py -v
+                        """
+                    }
+                }
+                stage('Reserve Car') {
+                    steps {
+                        bat """
+                            call "${env.VENV_DIR}\\Scripts\\activate"
+                            cd RentTests
+                            pytest test_reserve_car.py -v
+                        """
+                    }
+                }
+                stage('Search Cars') {
+                    steps {
+                        bat """
+                            call "${env.VENV_DIR}\\Scripts\\activate"
+                            cd RentTests
+                            pytest test_search_cars.py -v
+                        """
+                    }
+                }
             }
         }
         
         stage('Generate Report') {
             steps {
                 bat """
-                    call ${VENV_DIR}\\Scripts\\activate
+                    call "${env.VENV_DIR}\\Scripts\\activate"
                     cd RentTests
-                    %PYTHON% -m pytest --html=report.html
+                    pytest --html=report.html
                 """
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'RentTests/report.html', fingerprint: true
-                }
+                archiveArtifacts artifacts: 'RentTests/report.html', fingerprint: true
             }
         }
     }
@@ -89,15 +94,29 @@ pipeline {
         always {
             bat """
                 @echo off
-                :: Clean up virtual environment
-                if exist ${VENV_DIR} rd /s /q ${VENV_DIR}
+                echo Cleaning up...
+                if exist "${env.VENV_DIR}" rd /s /q "${env.VENV_DIR}"
             """
         }
-        success {
-            echo 'All tests passed!'
-        }
-        failure {
-            echo 'Some tests failed. Check the console output for details.'
+    }
+}
+
+// Helper function to find Python
+def findPython() {
+    def paths = env.PYTHON_PATHS.split(';')
+    for (path in paths) {
+        try {
+            // Check if python exists at this path
+            def status = bat(
+                script: "@echo off\n\"${path}\" --version > nul 2>&1",
+                returnStatus: true
+            )
+            if (status == 0) {
+                return path
+            }
+        } catch (Exception e) {
+            continue
         }
     }
+    return null
 }
