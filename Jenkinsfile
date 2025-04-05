@@ -1,17 +1,19 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps { checkout scm }
-        }
-        stage('Dependências') {
+        stage('Rental History Test') {
             steps {
-                sh 'npm install' 
+                sh 'python -m unittest RentTests/test_rental_history.py'
             }
         }
-        stage('Testes') {
+        stage('Reserve Car Test') {
             steps {
-                sh 'npm test'  
+                sh 'python -m unittest RentTests/test_reserve_car.py'
+            }
+        }
+        stage('Search Cars Test') {
+            steps {
+                sh 'python -m unittest RentTests/test_search_cars.py'
             }
         }
     }
