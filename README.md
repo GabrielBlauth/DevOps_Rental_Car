@@ -1,56 +1,76 @@
-# DevOps_Rental_Car
-Simple Rental Car Management System
+# DevOps Rental Car
 
-Overview
-This simple Rental Car Management System is a comprehensive software solution designed to exemplify the operations of a car rental service. This application allows for a simple and efficient management of vehicle inventory, customer bookings, and some administrative tasks.
+A simple Rental Car Management System, built to practice a full DevOps workflow — from application code to automated testing and CI pipeline — as part of a Computer Science DevOps module.
 
-Features
-- Vehicle Management: Choosing the desired vehicle from the fleet inventory
-- Booking System: Process customer reservations and manage rental schedules
-- Customer Management: Store and retrieve customer information and rental history
+## Overview
 
+This application manages a small car rental service: browsing available vehicles, creating and closing rentals, and tracking rental history and pricing. It was built specifically to have something real to run through an automated Jenkins pipeline, not just as a standalone app.
 
-Technology Stack
-- Frontend: HTML5, JavaScript.
-- Backend: Python/Flask
-- Database: Json file for running/testing.
+## Features
 
-Installation
-1. Clone the repository
-   
+- **Browse Fleet** — list all cars, with an optional filter by availability
+- **Create Rental** — book a car for a date range; automatically calculates total price based on days rented and marks the car as unavailable
+- **Return Car** — close out an active rental and make the car available again
+- **Rental History** — view all past and active rentals
+- **Reviews** — view the most recent reviews left for a specific car
+
+## Technology Stack
+- **Backend:** Python / Flask (REST API)
+- **Frontend:** HTML5, JavaScript, served via Flask templates
+- **Data storage:** JSON files (`cars.json`, `rentals.json`) — simple file-based persistence for demo/testing purposes
+- **Testing:** pytest + Selenium (`RentTests/`)
+- **CI/CD:** Jenkins pipeline (see `Jenkinsfile`) — sets up a virtual environment, runs the full pytest suite, and publishes an HTML test report on every run
+
+## Installation
+
+1. Clone the repository:
+   ```
    git clone https://github.com/GabrielBlauth/DevOps_Rental_Car.git
-   
-2. Install dependencies
-   
-   npm install (for frontend)
-   pip install -r requirements.txt (for Python backend)
-   
-3. Configure database connection in `config.json`
-4. Run the application
-   
-   npm start (frontend)
-   python app.py (backend)
-   
+   cd DevOps_Rental_Car
+   ```
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Run the application:
+   ```
+   python app.py
+   ```
+4. The app will be available at `http://localhost:5000`
 
-Project Structure
+## Running Tests
 
-rental-car-system/
-├── frontend/           # Frontend code
-├── backend/            # Backend code
-├── database/           # Database scripts
-├── docs/               # Documentation
-└── tests/              # Test cases
+Tests live in `RentTests/` and run via pytest:
+```
+cd RentTests
+pytest -v
+```
 
+The same suite runs automatically in the Jenkins pipeline on every build, with results published as an HTML report.
 
-Contributing
-This project was developed as part of DevOps subject from our Computer Science course. Contributors:
+## Project Structure
+```
+DevOps_Rental_Car/
+├── app.py              # Flask app and API routes
+├── cars.json            # Vehicle inventory (auto-created on first run)
+├── rentals.json          # Rental records (auto-created on first run)
+├── static/              # Frontend static assets
+├── templates/            # Frontend HTML templates
+├── RentTests/            # pytest / Selenium test suite
+└── Jenkinsfile           # CI pipeline definition
+```
+
+## Contributing
+
+This project was developed as part of a DevOps module in our Computer Science course. Contributors:
 - João Henrique
 - Gabriel Blauth
 - Marcos Fernandes
 - Luan Paes
 
-License
+## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Acknowledgements
+## Acknowledgements
 - Professor Sakshi Panchale for guidance.
